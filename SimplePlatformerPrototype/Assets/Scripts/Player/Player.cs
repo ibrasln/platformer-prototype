@@ -19,13 +19,13 @@ namespace Platformer.Player
     [DisallowMultipleComponent]
     public class Player : MonoBehaviour
     {
-        private Rigidbody2D rB;
-        private Animator anim;
-        private CapsuleCollider2D col;
-        private MovementByForceEvent movementByForceEvent;
-        private MovementByVelocityEvent movementByVelocityEvent;
-        private MovementToPositionEvent movementToPositionEvent;
-        private MovementStopEvent movementStopEvent;
+        [HideInInspector] public Rigidbody2D rB;
+        [HideInInspector] public Animator anim;
+        [HideInInspector] public CapsuleCollider2D col;
+        [HideInInspector] public MovementByForceEvent movementByForceEvent;
+        [HideInInspector] public MovementByVelocityEvent movementByVelocityEvent;
+        [HideInInspector] public MovementToPositionEvent movementToPositionEvent;
+        [HideInInspector] public MovementStopEvent movementStopEvent;
 
         private void Awake()
         {

@@ -31,9 +31,9 @@ namespace Platformer.Movement
             MoveRigidbody(movementByVelocityEventArgs.movementSpeed, movementByVelocityEventArgs.direction);
         }
 
-        private void MoveRigidbody(float movementSpeed, Vector2 direction)
+        private void MoveRigidbody(float movementSpeed, float direction)
         {
-            rb.velocity = movementSpeed * direction;
+            rb.velocity = new(movementSpeed * direction, rb.velocity.y);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Platformer.Movement
     {
         public event Action<MovementByVelocityEvent, MovementByVelocityEventArgs> OnMovementByVelocity;
 
-        public void CallMovementByVelocity(float movementSpeed, Vector2 direction)
+        public void CallMovementByVelocityEvent(float movementSpeed, float direction)
         {
             OnMovementByVelocity?.Invoke(this, new MovementByVelocityEventArgs { movementSpeed = movementSpeed , direction = direction });
         }
@@ -16,6 +16,6 @@ namespace Platformer.Movement
     public class MovementByVelocityEventArgs : EventArgs
     {
         public float movementSpeed;
-        public Vector2 direction;
+        public float direction;
     }
 }

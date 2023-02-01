@@ -18,29 +18,23 @@ namespace Platformer.Movement
 
         private void OnEnable()
         {
-            movementByForceEvent.OnMovementByForce += MovementByForceEvent_OnMovementByForce; ;
             movementByVelocityEvent.OnMovementByVelocity += MovementByVelocityEvent_OnMovementByVelocity;
         }
 
         private void OnDisable()
         {
-            movementByForceEvent.OnMovementByForce -= MovementByForceEvent_OnMovementByForce; ;
             movementByVelocityEvent.OnMovementByVelocity -= MovementByVelocityEvent_OnMovementByVelocity;
         }
 
-        private void MovementByForceEvent_OnMovementByForce(MovementByForceEvent movementByForceEvent, MovementByForceEventArgs movementByForceEventArgs)
-        {
-            Flip(movementByForceEventArgs.direction);
-        }
         private void MovementByVelocityEvent_OnMovementByVelocity(MovementByVelocityEvent movementByVelocityEvent, MovementByVelocityEventArgs movementByVelocityEventArgs)
         {
             Flip(movementByVelocityEventArgs.direction);
         }
 
-        private void Flip(Vector2 direction)
+        private void Flip(float direction)
         {
-            if (direction.x >= .01f) transform.localScale = Vector2.one;
-            else if (direction.x <= -.01f) transform.localScale = new(-1, 1);
+            if (direction >= .01f) transform.localScale = Vector2.one;
+            else if (direction <= -.01f) transform.localScale = new(-1, 1);
         }
 
     }
