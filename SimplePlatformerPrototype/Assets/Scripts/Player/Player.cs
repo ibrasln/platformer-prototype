@@ -3,7 +3,8 @@ using UnityEngine;
 namespace Platformer.Player
 {
     using Movement;
-    
+    using Attack;
+
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(CapsuleCollider2D))]
@@ -16,26 +17,26 @@ namespace Platformer.Player
     [RequireComponent(typeof(MovementStop))]
     [RequireComponent(typeof(MovementStopEvent))]
     [RequireComponent(typeof(MovementFlip))]
+    [RequireComponent(typeof(MeleeAttack))]
+    [RequireComponent(typeof(MeleeAttackEvent))]
     [DisallowMultipleComponent]
     public class Player : MonoBehaviour
     {
-        [HideInInspector] public Rigidbody2D rB;
-        [HideInInspector] public Animator anim;
         [HideInInspector] public CapsuleCollider2D col;
         [HideInInspector] public MovementByForceEvent movementByForceEvent;
         [HideInInspector] public MovementByVelocityEvent movementByVelocityEvent;
         [HideInInspector] public MovementToPositionEvent movementToPositionEvent;
         [HideInInspector] public MovementStopEvent movementStopEvent;
+        [HideInInspector] public MeleeAttackEvent meleeAttackEvent;
 
         private void Awake()
         {
-            rB = GetComponent<Rigidbody2D>();
-            anim = GetComponent<Animator>();
             col = GetComponent<CapsuleCollider2D>();
             movementByForceEvent = GetComponent<MovementByForceEvent>();
             movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
             movementToPositionEvent = GetComponent<MovementToPositionEvent>();
             movementStopEvent = GetComponent<MovementStopEvent>();
+            meleeAttackEvent = GetComponent<MeleeAttackEvent>();
         }
     }
 }

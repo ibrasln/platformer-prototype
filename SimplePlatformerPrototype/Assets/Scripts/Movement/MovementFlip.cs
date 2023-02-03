@@ -2,17 +2,14 @@ using UnityEngine;
 
 namespace Platformer.Movement
 {
-    [RequireComponent(typeof(MovementByForceEvent))]
     [RequireComponent(typeof(MovementByVelocityEvent))]
     [DisallowMultipleComponent]
     public class MovementFlip : MonoBehaviour
     {
-        private MovementByForceEvent movementByForceEvent;
         private MovementByVelocityEvent movementByVelocityEvent;
 
         private void Awake()
         {
-            movementByForceEvent = GetComponent<MovementByForceEvent>();
             movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
         }
 
