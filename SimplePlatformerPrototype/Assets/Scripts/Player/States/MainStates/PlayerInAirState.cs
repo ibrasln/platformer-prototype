@@ -1,10 +1,9 @@
 namespace Platformer.Player
 {
-    public class PlayerGroundedState : PlayerState
+    public class PlayerInAirState : PlayerState
     {
         #region Inputs
         protected int xInput;
-        protected int yInput;
         protected bool jumpInput;
         protected bool dashInput;
         #endregion
@@ -13,7 +12,7 @@ namespace Platformer.Player
         protected bool onGround;
         #endregion
 
-        public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+        public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
 
@@ -36,23 +35,29 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
+            player.Anim.SetFloat("yVelocity", player.RB.velocity.y);
             xInput = player.InputHandler.NormInputX;
-            yInput = player.InputHandler.NormInputY;
             jumpInput = player.InputHandler.JumpInput;
             dashInput = player.InputHandler.DashInput;
 
-            if (jumpInput)
+            if (onGround && player.CurrentVelocity.y < .1f)
             {
+                player.JumpAmountLeft = playerData.jumpAmount;
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else if (jumpInput && player.JumpAmountLeft > 0)
+            {   
                 stateMachine.ChangeState(player.JumpState);
             }
             else if (dashInput && player.dashCooldownTimer <= 0)
             {
-                player.InputHandler.UseDashInput();
                 stateMachine.ChangeState(player.DashState);
             }
-            else if (!onGround)
-                stateMachine.ChangeState(player.InAirState);
+            else
+            {
+                player.CheckIfShouldFlip(xInput);
+                player.SetVelocityX(playerData.moveSpeed * xInput);
+            }
         }
 
         public override void PhysicsUpdate()

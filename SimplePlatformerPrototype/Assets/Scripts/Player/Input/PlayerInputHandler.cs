@@ -9,12 +9,13 @@ namespace Platformer.Player
         public int NormInputX { get; private set; }
         public int NormInputY { get; private set; }
         public bool JumpInput { get; private set; }
+        public bool DashInput { get; private set; }
 
         public void OnMove(InputValue value)
         {
             RawMovementInput = value.Get<Vector2>();
-            NormInputX = (int)RawMovementInput.normalized.x;
-            NormInputY = (int)RawMovementInput.normalized.y;
+            NormInputX = Mathf.RoundToInt(RawMovementInput.normalized.x);
+            NormInputY = Mathf.RoundToInt(RawMovementInput.normalized.y);
         }
 
         public void OnJump(InputValue value)
@@ -22,8 +23,18 @@ namespace Platformer.Player
             if(value.isPressed)
             {
                 JumpInput = true;
-                Debug.Log("Jump button was pressed");
             }
         }
+
+        public void OnDash(InputValue value)
+        {
+            if(value.isPressed)
+            {
+                DashInput = true;
+            }
+        }
+
+        public void UseJumpInput() => JumpInput = false;
+        public void UseDashInput() => DashInput = false;
     }
 }

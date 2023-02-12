@@ -1,8 +1,10 @@
+using UnityEngine;
+
 namespace Platformer.Player
 {
-    public class PlayerMoveState : PlayerGroundedState
+    public class PlayerCrouchState : PlayerGroundedState
     {
-        public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+        public PlayerCrouchState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
 
@@ -14,6 +16,7 @@ namespace Platformer.Player
         public override void Enter()
         {
             base.Enter();
+            player.SetVelocityX(0f);
         }
 
         public override void Exit()
@@ -24,14 +27,8 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
-            player.SetVelocityX(playerData.moveSpeed * xInput);
-            player.CheckIfShouldFlip(xInput);
-
-            if (xInput == 0)
+            if (yInput == 0)
                 stateMachine.ChangeState(player.IdleState);
-            else if (yInput == -1)
-                stateMachine.ChangeState(player.SlideState);
         }
 
         public override void PhysicsUpdate()

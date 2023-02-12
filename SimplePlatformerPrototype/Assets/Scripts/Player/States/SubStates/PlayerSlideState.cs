@@ -1,8 +1,10 @@
+using UnityEngine;
+
 namespace Platformer.Player
 {
-    public class PlayerMoveState : PlayerGroundedState
+    public class PlayerSlideState : PlayerGroundedState
     {
-        public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+        public PlayerSlideState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
 
@@ -14,6 +16,7 @@ namespace Platformer.Player
         public override void Enter()
         {
             base.Enter();
+            player.SetVelocityX(playerData.slideSpeed * player.FacingDirection);
         }
 
         public override void Exit()
@@ -24,14 +27,10 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
-            player.SetVelocityX(playerData.moveSpeed * xInput);
-            player.CheckIfShouldFlip(xInput);
-
-            if (xInput == 0)
+            if (player.CurrentVelocity.x < .1f)
+            {
                 stateMachine.ChangeState(player.IdleState);
-            else if (yInput == -1)
-                stateMachine.ChangeState(player.SlideState);
+            }
         }
 
         public override void PhysicsUpdate()
