@@ -1,8 +1,8 @@
 namespace Platformer.Player
 {
-    public class PlayerIdleState : PlayerGroundedState
+    public class PlayerWallSlideState : PlayerTouchingWallState
     {
-        public PlayerIdleState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+        public PlayerWallSlideState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
 
@@ -14,7 +14,7 @@ namespace Platformer.Player
         public override void Enter()
         {
             base.Enter();
-            player.SetVelocityZero();
+            player.SetVelocityX(0f);
         }
 
         public override void Exit()
@@ -25,10 +25,7 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (xInput != 0)
-                stateMachine.ChangeState(player.MoveState);
-            else if (yInput == -1)
-                stateMachine.ChangeState(player.CrouchState);
+            player.SetVelocityY(playerData.wallSlideSpeed);
         }
 
         public override void PhysicsUpdate()

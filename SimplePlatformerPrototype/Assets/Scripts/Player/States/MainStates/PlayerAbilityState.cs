@@ -3,7 +3,9 @@ namespace Platformer.Player
     public class PlayerAbilityState : PlayerState
     {
         protected bool isAbilityDone;
+
         protected bool onGround;
+        protected bool isTouchingWall;
 
         public PlayerAbilityState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {

@@ -12,9 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3aed40767949c8489f4025c73df6ff9, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  moveSpeed: 12
-  jumpPower: 15
+  moveSpeed: 10
+  moveSpeedInAir: 7.5
+  jumpPower: 18
+  jumpAmount: 2
+  coyoteTime: 0.25
+  slideSpeed: 20
+  slideCooldown: 1
+  slideTime: 0.4
+  dashSpeed: 25
+  dashCooldown: 1
+  dashTime: 0.25
   groundCheckRadius: 0.2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  wallCheckDistance: 0.25
+  startOffset: {x: 0.14, y: 1.17}
+  ladderCheckRadius: 0.5
+  whatIsLadder:
+    serializedVersion: 2
+    m_Bits: 0
+  wallSlideSpeed: -5

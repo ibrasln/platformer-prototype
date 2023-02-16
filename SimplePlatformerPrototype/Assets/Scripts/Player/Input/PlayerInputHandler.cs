@@ -11,27 +11,27 @@ namespace Platformer.Player
         public bool JumpInput { get; private set; }
         public bool DashInput { get; private set; }
 
-        public void OnMove(InputValue value)
+        public void OnMove(InputAction.CallbackContext context)
         {
-            RawMovementInput = value.Get<Vector2>();
+            RawMovementInput = context.ReadValue<Vector2>();
             NormInputX = Mathf.RoundToInt(RawMovementInput.normalized.x);
             NormInputY = Mathf.RoundToInt(RawMovementInput.normalized.y);
         }
 
-        public void OnJump(InputValue value)
+        public void OnJump(InputAction.CallbackContext context)
         {
-            if(value.isPressed)
-            {
+            if (context.started)
                 JumpInput = true;
-            }
+            else if (context.canceled)
+                JumpInput = false;
         }
 
-        public void OnDash(InputValue value)
+        public void OnDash(InputAction.CallbackContext context)
         {
-            if(value.isPressed)
-            {
+            if (context.started)
                 DashInput = true;
-            }
+            else if (context.canceled)
+                DashInput = false;
         }
 
         public void UseJumpInput() => JumpInput = false;

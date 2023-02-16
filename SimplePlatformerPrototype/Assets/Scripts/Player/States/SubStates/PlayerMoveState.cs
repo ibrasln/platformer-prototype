@@ -30,8 +30,10 @@ namespace Platformer.Player
 
             if (xInput == 0)
                 stateMachine.ChangeState(player.IdleState);
-            else if (yInput == -1)
+            else if (yInput == -1 && player.SlideState.CanSlide())
                 stateMachine.ChangeState(player.SlideState);
+            else if (dashInput && player.DashState.CanDash())
+                stateMachine.ChangeState(player.DashState);
         }
 
         public override void PhysicsUpdate()

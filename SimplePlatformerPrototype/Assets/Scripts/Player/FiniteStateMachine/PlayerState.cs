@@ -8,6 +8,7 @@ namespace Platformer.Player
         protected PlayerStateMachine stateMachine;
         protected PlayerDataSO playerData;
         protected float startTime;
+        protected bool isAnimationFinished;
         private readonly string animBoolName;
 
         public PlayerState (Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName)
@@ -22,8 +23,8 @@ namespace Platformer.Player
         {
             player.Anim.SetBool(animBoolName, true);
             startTime = Time.time;
+            isAnimationFinished = false;
             DoChecks();
-            Debug.Log(animBoolName);
         }
 
         public virtual void Exit()
@@ -45,5 +46,7 @@ namespace Platformer.Player
         {
 
         }
+
+        public virtual void AnimationFinishTrigger() => isAnimationFinished = false;
     }
 }

@@ -2,23 +2,21 @@ using UnityEngine;
 
 namespace Platformer.Player
 {
-    public class PlayerGroundedState : PlayerState
+    public class PlayerTouchingWallState : PlayerState
     {
-        #region Inputs
-        protected int xInput;
-        protected int yInput;
-        protected bool jumpInput;
-        protected bool dashInput;
-        #endregion
-
-        #region Checks
         protected bool onGround;
         protected bool isTouchingWall;
-        protected bool isTouchingLadder;
-        #endregion
+        protected bool jumpInput;
+        protected int xInput;
+        protected int yInput;
 
-        public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+        public PlayerTouchingWallState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
+        }
+
+        public override void AnimationFinishTrigger()
+        {
+            base.AnimationFinishTrigger();
         }
 
         public override void DoChecks()
@@ -26,7 +24,6 @@ namespace Platformer.Player
             base.DoChecks();
             onGround = player.CheckOnGround();
             isTouchingWall = player.CheckIsTouchingWall();
-            // TODO: isTouchingLadder
         }
 
         public override void Enter()
@@ -44,19 +41,20 @@ namespace Platformer.Player
         {
             base.LogicUpdate();
 
-            Debug.Log("IsTouchingWall: " + isTouchingWall);
-            Debug.Log("OnGround: " + onGround);
-
+            jumpInput = player.InputHandler.JumpInput;
             xInput = player.InputHandler.NormInputX;
             yInput = player.InputHandler.NormInputY;
-            jumpInput = player.InputHandler.JumpInput;
-            dashInput = player.InputHandler.DashInput;
 
-            if (jumpInput && player.JumpState.CanJump())
-                stateMachine.ChangeState(player.JumpState);
-            else if (!onGround)
+            if (onGround && player.CurrentVelocity.y < .1f)
             {
-                player.InAirState.StartCoyoteTime();
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else if (jumpInput && player.JumpState.CanJump() && (player.FacingDirection * -1) == xInput)
+            {
+                stateMachine.ChangeState(player.JumpState);
+            }
+            else if (!isTouchingWall && player.CurrentVelocity.y < .1f)
+            {
                 stateMachine.ChangeState(player.InAirState);
             }
         }

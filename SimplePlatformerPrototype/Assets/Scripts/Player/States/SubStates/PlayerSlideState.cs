@@ -4,6 +4,7 @@ namespace Platformer.Player
 {
     public class PlayerSlideState : PlayerGroundedState
     {
+        private float lastSlideTime;
         public PlayerSlideState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
@@ -16,7 +17,6 @@ namespace Platformer.Player
         public override void Enter()
         {
             base.Enter();
-            player.SetVelocityX(playerData.slideSpeed * player.FacingDirection);
         }
 
         public override void Exit()
@@ -27,15 +27,21 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (player.CurrentVelocity.x < .1f)
-            {
+
+            if (Time.time >= startTime + playerData.slideTime)
                 stateMachine.ChangeState(player.IdleState);
-            }
+            else
+                player.SetVelocityX(playerData.slideSpeed * player.FacingDirection);
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+        }
+
+        public bool CanSlide()
+        {
+            return Time.time >= lastSlideTime + playerData.slideCooldown;
         }
     }
 }

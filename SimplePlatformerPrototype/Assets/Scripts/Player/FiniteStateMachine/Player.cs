@@ -12,6 +12,8 @@ namespace Platformer.Player
         public PlayerJumpState JumpState { get; private set; }
         public PlayerInAirState InAirState { get; private set; }
         public PlayerDashState DashState { get; private set; }
+        public PlayerWallSlideState WallSlideState { get; private set; }
+        public PlayerLedgeGrabState LedgeGrabState { get; private set; }
         #endregion
 
         #region COMPONENTS
@@ -26,17 +28,15 @@ namespace Platformer.Player
         #region OTHER VARIABLES
         public Vector2 CurrentVelocity { get; private set; }
         public int FacingDirection { get; private set; }
-        public int JumpAmountLeft { get; set; }
-        
-        [HideInInspector] public float slideCooldownTimer;
-        
-        [HideInInspector] public float dashCooldownTimer;
         
         private Vector2 workspace;
         #endregion
 
         #region CHECK VARIABLES
         [SerializeField] private Transform groundCheckPosition;
+        [SerializeField] private Transform wallCheckPosition;
+        [SerializeField] private Transform ladderCheckPosition;
+        [SerializeField] private Transform ledgeCheckPosition;
         #endregion
 
         #region UNITY CALLBACK FUNCTIONS
@@ -54,24 +54,20 @@ namespace Platformer.Player
             JumpState = new(this, StateMachine, playerData, "inAir");
             InAirState = new(this, StateMachine, playerData, "inAir");
             DashState = new(this, StateMachine, playerData, "dash");
+            WallSlideState = new(this, StateMachine, playerData, "wallSlide");
+            LedgeGrabState = new(this, StateMachine, playerData, "ledgeGrab");
         }
 
         private void Start()
         {
             StateMachine.Initialize(IdleState);
             FacingDirection = 1;
-            JumpAmountLeft = playerData.jumpAmount;
-            slideCooldownTimer = playerData.slideCooldown;
-            dashCooldownTimer = playerData.dashCooldown;
         }
 
         private void Update()
         {
             CurrentVelocity = RB.velocity;
             StateMachine.CurrentState.LogicUpdate();
-
-            ReduceCooldownTimer(ref slideCooldownTimer);
-            ReduceCooldownTimer(ref dashCooldownTimer);
         }
 
         private void FixedUpdate()
@@ -92,12 +88,33 @@ namespace Platformer.Player
             workspace.Set(RB.velocity.x, yVelocity);
             RB.velocity = workspace;
         }
+
+        public void SetVelocityZero()
+        {
+            workspace.Set(0f, 0f);
+            RB.velocity = workspace;
+        }
         #endregion
 
         #region CHECK FUNCTIONS
         public bool CheckOnGround()
         {
             return Physics2D.OverlapCircle(groundCheckPosition.position, playerData.groundCheckRadius, playerData.whatIsGround);
+        }
+
+        public bool CheckIsTouchingWall()
+        {
+            return Physics2D.Raycast(wallCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+        }
+
+        private bool CheckIsLedgeDetected()
+        {
+            return !Physics2D.Raycast(ledgeCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+        }
+
+        public bool CheckCanGrab()
+        {
+            return CheckIsTouchingWall() && CheckIsLedgeDetected();
         }
 
         public void CheckIfShouldFlip(int xInput)
@@ -114,17 +131,28 @@ namespace Platformer.Player
             transform.Rotate(0.0f, 180.0f, 0f);
         }
 
-        private void ReduceCooldownTimer(ref float cooldownTimer)
+        public Vector2 DetermineCornerPosition()
         {
-            if (cooldownTimer > 0)
-                cooldownTimer -= Time.deltaTime;
+            RaycastHit2D xHit = Physics2D.Raycast(wallCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+            float xDist = xHit.distance;
+            workspace.Set(xDist * FacingDirection, 0f);
+
+            RaycastHit2D yHit = Physics2D.Raycast(ledgeCheckPosition.position + (Vector3)workspace, Vector2.down, ledgeCheckPosition.position.y - wallCheckPosition.position.y, playerData.whatIsGround);
+            float yDist = yHit.distance;
+            workspace.Set(wallCheckPosition.position.x + (xDist * FacingDirection), ledgeCheckPosition.position.y - yDist);
+
+            return workspace;
         }
+
+        private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
         #endregion
 
         #region Gizmos
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(groundCheckPosition.position, playerData.groundCheckRadius);
+            Gizmos.DrawRay(wallCheckPosition.position, FacingDirection * playerData.wallCheckDistance * Vector2.right);
+            Gizmos.DrawRay(ledgeCheckPosition.position, FacingDirection * playerData.wallCheckDistance * Vector2.right);
         }
         #endregion
     }

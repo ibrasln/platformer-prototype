@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Platformer.Player
 {
     public class PlayerInAirState : PlayerState
@@ -9,7 +11,13 @@ namespace Platformer.Player
         #endregion
 
         #region Checks
-        protected bool onGround;
+        private bool onGround;
+        private bool isTouchingWall;
+        private bool canGrab;
+        #endregion
+
+        #region Other Variables
+        private bool coyoteTime;
         #endregion
 
         public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
@@ -20,6 +28,8 @@ namespace Platformer.Player
         {
             base.DoChecks();
             onGround = player.CheckOnGround();
+            isTouchingWall = player.CheckIsTouchingWall();
+            canGrab = player.CheckCanGrab();
         }
 
         public override void Enter()
@@ -35,6 +45,9 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            CheckCoyoteTime();
+
             player.Anim.SetFloat("yVelocity", player.RB.velocity.y);
             xInput = player.InputHandler.NormInputX;
             jumpInput = player.InputHandler.JumpInput;
@@ -42,21 +55,28 @@ namespace Platformer.Player
 
             if (onGround && player.CurrentVelocity.y < .1f)
             {
-                player.JumpAmountLeft = playerData.jumpAmount;
                 stateMachine.ChangeState(player.IdleState);
             }
-            else if (jumpInput && player.JumpAmountLeft > 0)
+            else if (jumpInput && player.JumpState.CanJump())
             {   
                 stateMachine.ChangeState(player.JumpState);
             }
-            else if (dashInput && player.dashCooldownTimer <= 0)
+            else if (dashInput && player.DashState.CanDash())
             {
                 stateMachine.ChangeState(player.DashState);
+            }
+            else if (canGrab)
+            {
+                stateMachine.ChangeState(player.LedgeGrabState);
+            }
+            else if (isTouchingWall && (player.CurrentVelocity.y < .1f))
+            {
+                stateMachine.ChangeState(player.WallSlideState);
             }
             else
             {
                 player.CheckIfShouldFlip(xInput);
-                player.SetVelocityX(playerData.moveSpeed * xInput);
+                player.SetVelocityX(playerData.moveSpeedInAir * xInput);
             }
         }
 
@@ -64,5 +84,16 @@ namespace Platformer.Player
         {
             base.PhysicsUpdate();
         }
+
+        private void CheckCoyoteTime()
+        {
+            if (coyoteTime && Time.time >= startTime + playerData.coyoteTime)
+            {
+                coyoteTime = false;
+                player.JumpState.DecreaseJumpAmountLeft();
+            }
+        }
+
+        public void StartCoyoteTime() => coyoteTime = true;
     }
 }
