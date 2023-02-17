@@ -44,19 +44,6 @@ namespace Platformer.Player
             jumpInput = player.InputHandler.JumpInput;
             xInput = player.InputHandler.NormInputX;
             yInput = player.InputHandler.NormInputY;
-
-            if (onGround && player.CurrentVelocity.y < .1f)
-            {
-                stateMachine.ChangeState(player.IdleState);
-            }
-            else if (jumpInput && player.JumpState.CanJump() && (player.FacingDirection * -1) == xInput)
-            {
-                stateMachine.ChangeState(player.JumpState);
-            }
-            else if (!isTouchingWall && player.CurrentVelocity.y < .1f)
-            {
-                stateMachine.ChangeState(player.InAirState);
-            }
         }
 
         public override void PhysicsUpdate()

@@ -29,6 +29,7 @@ namespace Platformer.Player
         public float dashSpeed = 25f;
         public float dashCooldown = 1f;
         public float dashTime = .3f;
+        public float distanceBetweenAIs = .5f;
         
         [Space(6)]
         [Header("GROUND")]

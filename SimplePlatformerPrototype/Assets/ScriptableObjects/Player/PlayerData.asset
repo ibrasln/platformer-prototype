@@ -22,13 +22,14 @@ MonoBehaviour:
   slideTime: 0.4
   dashSpeed: 25
   dashCooldown: 1
-  dashTime: 0.25
+  dashTime: 0.4
+  distanceBetweenAIs: 1
   groundCheckRadius: 0.2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  wallCheckDistance: 0.25
-  startOffset: {x: 0.14, y: 1.17}
+  wallCheckDistance: 0.23
+  startOffset: {x: 0.1, y: 1.16}
   ladderCheckRadius: 0.5
   whatIsLadder:
     serializedVersion: 2

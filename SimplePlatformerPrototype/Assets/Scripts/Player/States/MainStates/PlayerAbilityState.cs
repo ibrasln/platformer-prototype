@@ -34,9 +34,13 @@ namespace Platformer.Player
             if (isAbilityDone)
             {
                 if (onGround && player.CurrentVelocity.y < .1f)
+                {
                     stateMachine.ChangeState(player.IdleState);
+                }
                 else
+                {
                     stateMachine.ChangeState(player.InAirState);
+                }
             }
         }
 

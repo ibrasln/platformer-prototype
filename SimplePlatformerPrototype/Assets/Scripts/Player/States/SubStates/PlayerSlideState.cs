@@ -5,6 +5,8 @@ namespace Platformer.Player
     public class PlayerSlideState : PlayerGroundedState
     {
         private float lastSlideTime;
+        private Vector2 lastAIPos;
+
         public PlayerSlideState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
@@ -28,15 +30,32 @@ namespace Platformer.Player
         {
             base.LogicUpdate();
 
-            if (Time.time >= startTime + playerData.slideTime)
+            if (Time.time >= startTime + playerData.slideTime || isTouchingWall)
+            { 
                 stateMachine.ChangeState(player.IdleState);
+            }
             else
+            {
                 player.SetVelocityX(playerData.slideSpeed * player.FacingDirection);
+                CheckIfShouldPlaceAfterImage();
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+        }
+
+        private void CheckIfShouldPlaceAfterImage()
+        {
+            if (Mathf.Abs(player.transform.position.x - lastAIPos.x) >= playerData.distanceBetweenAIs)
+                PlaceAfterImage();
+        }
+
+        private void PlaceAfterImage()
+        {
+            PlayerAfterImagePool.instance.GetObjectFromPool();
+            lastAIPos = player.transform.position;
         }
 
         public bool CanSlide()

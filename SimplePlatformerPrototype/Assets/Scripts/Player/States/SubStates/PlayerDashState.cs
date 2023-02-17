@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace Platformer.Player
@@ -6,6 +5,8 @@ namespace Platformer.Player
     public class PlayerDashState : PlayerAbilityState
     {
         private float lastDashTime;
+        private Vector2 lastAIPos;
+
         public PlayerDashState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
@@ -29,7 +30,7 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (Time.time >= startTime + playerData.dashTime)
+            if (Time.time >= startTime + playerData.dashTime || isTouchingWall)
             {
                 isAbilityDone = true;
                 lastDashTime = Time.time;
@@ -38,6 +39,7 @@ namespace Platformer.Player
             {
                 player.SetVelocityX(playerData.dashSpeed * player.FacingDirection);
                 player.SetVelocityY(0f);
+                CheckIfShouldPlaceAfterImage();
             }
             
         }
@@ -45,6 +47,18 @@ namespace Platformer.Player
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+        }
+
+        private void CheckIfShouldPlaceAfterImage()
+        {
+            if (Mathf.Abs(player.transform.position.x - lastAIPos.x) >= playerData.distanceBetweenAIs)
+                PlaceAfterImage();
+        }
+
+        private void PlaceAfterImage()
+        {
+            PlayerAfterImagePool.instance.GetObjectFromPool();
+            lastAIPos = player.transform.position;
         }
 
         public bool CanDash()

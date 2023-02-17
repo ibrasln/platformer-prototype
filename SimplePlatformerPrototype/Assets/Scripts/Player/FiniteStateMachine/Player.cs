@@ -135,7 +135,7 @@ namespace Platformer.Player
         {
             RaycastHit2D xHit = Physics2D.Raycast(wallCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
             float xDist = xHit.distance;
-            workspace.Set(xDist * FacingDirection, 0f);
+            workspace.Set((xDist + .05f) * FacingDirection, 0f);
 
             RaycastHit2D yHit = Physics2D.Raycast(ledgeCheckPosition.position + (Vector3)workspace, Vector2.down, ledgeCheckPosition.position.y - wallCheckPosition.position.y, playerData.whatIsGround);
             float yDist = yHit.distance;

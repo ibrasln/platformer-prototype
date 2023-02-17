@@ -44,16 +44,15 @@ namespace Platformer.Player
         {
             base.LogicUpdate();
 
-            Debug.Log("IsTouchingWall: " + isTouchingWall);
-            Debug.Log("OnGround: " + onGround);
-
             xInput = player.InputHandler.NormInputX;
             yInput = player.InputHandler.NormInputY;
             jumpInput = player.InputHandler.JumpInput;
             dashInput = player.InputHandler.DashInput;
 
             if (jumpInput && player.JumpState.CanJump())
+            {
                 stateMachine.ChangeState(player.JumpState);
+            }
             else if (!onGround)
             {
                 player.InAirState.StartCoyoteTime();

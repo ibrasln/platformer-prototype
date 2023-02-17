@@ -32,6 +32,9 @@ namespace Platformer.Player
             cornerPos = player.DetermineCornerPosition();
             startPos.Set(cornerPos.x - (player.FacingDirection * playerData.startOffset.x), cornerPos.y - playerData.startOffset.y);
 
+            Debug.Log("Corner Position: " + cornerPos);
+            Debug.Log("Start Position: " + startPos);
+
             player.transform.position = startPos;
 
         }
@@ -50,7 +53,10 @@ namespace Platformer.Player
             {
                 stateMachine.ChangeState(player.WallSlideState);
             }
-            
+            else if (xInput == -player.FacingDirection)
+            {
+                stateMachine.ChangeState(player.InAirState);
+            }     
         }
 
         public override void PhysicsUpdate()

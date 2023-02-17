@@ -25,7 +25,18 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            player.SetVelocityY(playerData.wallSlideSpeed);
+            if (onGround && player.CurrentVelocity.y < .1f)
+            {
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else if (jumpInput && player.JumpState.CanJump() && xInput == -player.FacingDirection)
+            {
+                stateMachine.ChangeState(player.JumpState);
+            }
+            else
+            {
+                player.SetVelocityY(playerData.wallSlideSpeed);
+            }
         }
 
         public override void PhysicsUpdate()

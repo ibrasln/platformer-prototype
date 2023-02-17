@@ -24,6 +24,7 @@ namespace Platformer.Player
             player.Anim.SetBool(animBoolName, true);
             startTime = Time.time;
             isAnimationFinished = false;
+            Debug.Log(animBoolName);
             DoChecks();
         }
 
