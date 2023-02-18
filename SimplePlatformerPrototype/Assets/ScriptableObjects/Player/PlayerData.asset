@@ -23,7 +23,6 @@ MonoBehaviour:
   dashSpeed: 25
   dashCooldown: 1
   dashTime: 0.4
-  distanceBetweenAIs: 1
   groundCheckRadius: 0.2
   whatIsGround:
     serializedVersion: 2
@@ -35,3 +34,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   wallSlideSpeed: -5
+  afterImagePrefab: {fileID: 5450238868156576640, guid: f40e10e4598dd4a4bad3a217b42acea8, type: 3}
+  distanceBetweenAfterImages: 1

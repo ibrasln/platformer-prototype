@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Platformer.Player
 {
-    public class PlayerAfterImage : MonoBehaviour
+    public class AfterImage : MonoBehaviour
     {
         private SpriteRenderer sr;
         private Transform player;
@@ -36,7 +36,7 @@ namespace Platformer.Player
             
             if (Time.time >= timeActivated + activeTime)
             {
-                PlayerAfterImagePool.instance.AddToPool(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }

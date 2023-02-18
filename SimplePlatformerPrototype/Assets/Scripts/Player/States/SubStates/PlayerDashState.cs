@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace Platformer.Player
 {
+    using Manager;
+
     public class PlayerDashState : PlayerAbilityState
     {
         private float lastDashTime;
@@ -51,13 +53,13 @@ namespace Platformer.Player
 
         private void CheckIfShouldPlaceAfterImage()
         {
-            if (Mathf.Abs(player.transform.position.x - lastAIPos.x) >= playerData.distanceBetweenAIs)
+            if (Mathf.Abs(player.transform.position.x - lastAIPos.x) >= playerData.distanceBetweenAfterImages)
                 PlaceAfterImage();
         }
 
         private void PlaceAfterImage()
         {
-            PlayerAfterImagePool.instance.GetObjectFromPool();
+            ObjectPoolManager.instance.GetObjectFromPool("AfterImage");
             lastAIPos = player.transform.position;
         }
 

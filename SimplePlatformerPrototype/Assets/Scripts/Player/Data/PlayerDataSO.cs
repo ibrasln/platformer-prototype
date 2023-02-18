@@ -29,7 +29,6 @@ namespace Platformer.Player
         public float dashSpeed = 25f;
         public float dashCooldown = 1f;
         public float dashTime = .3f;
-        public float distanceBetweenAIs = .5f;
         
         [Space(6)]
         [Header("GROUND")]
@@ -52,5 +51,10 @@ namespace Platformer.Player
         [Space(6)]
         [Header("WALL SLIDE")]
         public float wallSlideSpeed = -5f;
+
+        [Space(6)]
+        [Header("AFTER IMAGE")]
+        public GameObject afterImagePrefab;
+        public float distanceBetweenAfterImages = 1f;
     }
 }
