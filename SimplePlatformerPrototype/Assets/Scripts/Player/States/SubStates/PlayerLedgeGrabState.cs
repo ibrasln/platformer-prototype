@@ -27,13 +27,10 @@ namespace Platformer.Player
         {
             base.Enter();
             player.SetVelocityZero();
-            player.RB.gravityScale = 0;
+            player.SetGravityScale(0);
             
             cornerPos = player.DetermineCornerPosition();
             startPos.Set(cornerPos.x - (player.FacingDirection * playerData.startOffset.x), cornerPos.y - playerData.startOffset.y);
-
-            Debug.Log("Corner Position: " + cornerPos);
-            Debug.Log("Start Position: " + startPos);
 
             player.transform.position = startPos;
 
@@ -42,7 +39,7 @@ namespace Platformer.Player
         public override void Exit()
         {
             base.Exit();
-            player.RB.gravityScale = 4;
+            player.ResetGravityScale();
         }
 
         public override void LogicUpdate()

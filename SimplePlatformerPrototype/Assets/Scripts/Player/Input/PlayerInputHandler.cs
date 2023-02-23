@@ -10,6 +10,7 @@ namespace Platformer.Player
         public int NormInputY { get; private set; }
         public bool JumpInput { get; private set; }
         public bool DashInput { get; private set; }
+        public bool AttackInput { get; private set; }
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -32,6 +33,14 @@ namespace Platformer.Player
                 DashInput = true;
             else if (context.canceled)
                 DashInput = false;
+        }
+
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                AttackInput = true;
+            else if (context.canceled)
+                AttackInput = false;
         }
 
         public void UseJumpInput() => JumpInput = false;

@@ -2,6 +2,8 @@ namespace Platformer.Player
 {
     public class PlayerWallSlideState : PlayerTouchingWallState
     {
+        private bool isFeetTouchingWall;
+
         public PlayerWallSlideState(Player player, PlayerStateMachine stateMachine, PlayerDataSO playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
         {
         }
@@ -9,6 +11,7 @@ namespace Platformer.Player
         public override void DoChecks()
         {
             base.DoChecks();
+            isFeetTouchingWall = player.CheckIsFeetTouchingWall();
         }
 
         public override void Enter()
@@ -25,6 +28,7 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
             if (onGround && player.CurrentVelocity.y < .1f)
             {
                 stateMachine.ChangeState(player.IdleState);
@@ -32,6 +36,11 @@ namespace Platformer.Player
             else if (jumpInput && player.JumpState.CanJump() && xInput == -player.FacingDirection)
             {
                 stateMachine.ChangeState(player.JumpState);
+            }
+            else if (!isFeetTouchingWall && player.CurrentVelocity.y < .1f)
+            {
+                player.SetVelocityX(-player.FacingDirection);
+                stateMachine.ChangeState(player.InAirState);
             }
             else
             {

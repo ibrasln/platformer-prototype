@@ -14,6 +14,8 @@ namespace Platformer.Player
         public PlayerDashState DashState { get; private set; }
         public PlayerWallSlideState WallSlideState { get; private set; }
         public PlayerLedgeGrabState LedgeGrabState { get; private set; }
+        public PlayerLadderClimbState LadderClimbState { get; private set; }
+        public PlayerAttackState AttackState { get; private set; }
         #endregion
 
         #region COMPONENTS
@@ -37,6 +39,7 @@ namespace Platformer.Player
         [SerializeField] private Transform wallCheckPosition;
         [SerializeField] private Transform ladderCheckPosition;
         [SerializeField] private Transform ledgeCheckPosition;
+        [SerializeField] private Transform feetWallCheckPosition;
         #endregion
 
         #region UNITY CALLBACK FUNCTIONS
@@ -56,6 +59,8 @@ namespace Platformer.Player
             DashState = new(this, StateMachine, playerData, "dash");
             WallSlideState = new(this, StateMachine, playerData, "wallSlide");
             LedgeGrabState = new(this, StateMachine, playerData, "ledgeGrab");
+            LadderClimbState = new(this, StateMachine, playerData, "ladderClimb");
+            AttackState = new(this, StateMachine, playerData, "attack");
         }
 
         private void Start()
@@ -94,6 +99,15 @@ namespace Platformer.Player
             workspace.Set(0f, 0f);
             RB.velocity = workspace;
         }
+
+        public void SetGravityScale(int scale)
+        {
+            RB.gravityScale = scale;
+        }
+        public void ResetGravityScale()
+        {
+            RB.gravityScale = 4;
+        }
         #endregion
 
         #region CHECK FUNCTIONS
@@ -107,6 +121,11 @@ namespace Platformer.Player
             return Physics2D.Raycast(wallCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
         }
 
+        public bool CheckIsFeetTouchingWall()
+        {
+            return Physics2D.Raycast(feetWallCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+        }
+
         private bool CheckIsLedgeDetected()
         {
             return !Physics2D.Raycast(ledgeCheckPosition.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
@@ -115,6 +134,11 @@ namespace Platformer.Player
         public bool CheckCanGrab()
         {
             return CheckIsTouchingWall() && CheckIsLedgeDetected();
+        }
+
+        public bool CheckIsTouchingLadder()
+        {
+            return Physics2D.OverlapCircle(ladderCheckPosition.position, playerData.ladderCheckRadius, playerData.whatIsLadder);
         }
 
         public void CheckIfShouldFlip(int xInput)
@@ -144,7 +168,12 @@ namespace Platformer.Player
             return workspace;
         }
 
-        private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+        #endregion
+
+        #region ANIMATION TRIGGERS
+        public void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+        public void AnimaionStartMovementTrigger() => StateMachine.CurrentState.AnimationStartMovementTrigger();
+        public void AnimationStopMovementTrigger() => StateMachine.CurrentState.AnimationStopMovementTrigger();
         #endregion
 
         #region Gizmos
@@ -152,7 +181,9 @@ namespace Platformer.Player
         {
             Gizmos.DrawWireSphere(groundCheckPosition.position, playerData.groundCheckRadius);
             Gizmos.DrawRay(wallCheckPosition.position, FacingDirection * playerData.wallCheckDistance * Vector2.right);
+            Gizmos.DrawRay(feetWallCheckPosition.position, FacingDirection * playerData.wallCheckDistance * Vector2.right);
             Gizmos.DrawRay(ledgeCheckPosition.position, FacingDirection * playerData.wallCheckDistance * Vector2.right);
+            Gizmos.DrawWireSphere(ladderCheckPosition.position, playerData.ladderCheckRadius);
         }
         #endregion
     }

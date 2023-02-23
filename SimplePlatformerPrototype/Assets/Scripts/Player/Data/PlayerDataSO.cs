@@ -46,6 +46,7 @@ namespace Platformer.Player
         [Space(6)]
         [Header("LADDER")]
         public float ladderCheckRadius = .5f;
+        public float ladderClimbSpeed = 7f;
         public LayerMask whatIsLadder;
 
         [Space(6)]
@@ -56,5 +57,10 @@ namespace Platformer.Player
         [Header("AFTER IMAGE")]
         public GameObject afterImagePrefab;
         public float distanceBetweenAfterImages = 1f;
+
+        [Space(6)]
+        [Header("ATTACK")]
+        public int attackAmount = 2;
+        public float attackMovementSpeed = 2.5f;
     }
 }

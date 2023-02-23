@@ -9,6 +9,7 @@ namespace Platformer.Player
         protected int yInput;
         protected bool jumpInput;
         protected bool dashInput;
+        protected bool attackInput;
         #endregion
 
         #region Checks
@@ -26,7 +27,7 @@ namespace Platformer.Player
             base.DoChecks();
             onGround = player.CheckOnGround();
             isTouchingWall = player.CheckIsTouchingWall();
-            // TODO: isTouchingLadder
+            isTouchingLadder = player.CheckIsTouchingLadder();
         }
 
         public override void Enter()
@@ -48,10 +49,21 @@ namespace Platformer.Player
             yInput = player.InputHandler.NormInputY;
             jumpInput = player.InputHandler.JumpInput;
             dashInput = player.InputHandler.DashInput;
+            attackInput = player.InputHandler.AttackInput;
 
-            if (jumpInput && player.JumpState.CanJump())
+            Debug.Log($"yInput: {yInput} | isTouchingLadder: {isTouchingLadder}");
+
+            if (attackInput)
+            {
+                stateMachine.ChangeState(player.AttackState);
+            }
+            else if (jumpInput && player.JumpState.CanJump())
             {
                 stateMachine.ChangeState(player.JumpState);
+            }
+            else if (isTouchingLadder && yInput == 1)
+            {
+                stateMachine.ChangeState(player.LadderClimbState);
             }
             else if (!onGround)
             {

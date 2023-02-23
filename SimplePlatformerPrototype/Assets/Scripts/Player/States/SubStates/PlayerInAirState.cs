@@ -5,15 +5,18 @@ namespace Platformer.Player
     public class PlayerInAirState : PlayerState
     {
         #region Inputs
-        protected int xInput;
-        protected bool jumpInput;
-        protected bool dashInput;
+        private int xInput;
+        private int yInput;
+        private bool jumpInput;
+        private bool dashInput;
         #endregion
 
         #region Checks
         private bool onGround;
         private bool isTouchingWall;
+        private bool isFeetTouchingWall;
         private bool canGrab;
+        private bool isTouchingLadder;
         #endregion
 
         #region Other Variables
@@ -29,7 +32,9 @@ namespace Platformer.Player
             base.DoChecks();
             onGround = player.CheckOnGround();
             isTouchingWall = player.CheckIsTouchingWall();
+            isFeetTouchingWall = player.CheckIsFeetTouchingWall();
             canGrab = player.CheckCanGrab();
+            isTouchingLadder = player.CheckIsTouchingLadder();
         }
 
         public override void Enter()
@@ -48,8 +53,9 @@ namespace Platformer.Player
 
             CheckCoyoteTime();
 
-            player.Anim.SetFloat("yVelocity", player.RB.velocity.y);
+            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
             xInput = player.InputHandler.NormInputX;
+            yInput = player.InputHandler.NormInputY;
             jumpInput = player.InputHandler.JumpInput;
             dashInput = player.InputHandler.DashInput;
 
@@ -65,11 +71,15 @@ namespace Platformer.Player
             {
                 stateMachine.ChangeState(player.DashState);
             }
+            else if (isTouchingLadder && yInput == 1)
+            {
+                stateMachine.ChangeState(player.LadderClimbState);
+            }
             else if (canGrab)
             {
                 stateMachine.ChangeState(player.LedgeGrabState);
             }
-            else if (isTouchingWall && (player.CurrentVelocity.y < .1f))
+            else if (isFeetTouchingWall && isTouchingWall && (player.CurrentVelocity.y < .1f))
             {
                 stateMachine.ChangeState(player.WallSlideState);
             }

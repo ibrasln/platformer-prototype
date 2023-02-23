@@ -24,7 +24,6 @@ namespace Platformer.Player
             player.Anim.SetBool(animBoolName, true);
             startTime = Time.time;
             isAnimationFinished = false;
-            Debug.Log(animBoolName);
             DoChecks();
         }
 
@@ -49,5 +48,14 @@ namespace Platformer.Player
         }
 
         public virtual void AnimationFinishTrigger() => isAnimationFinished = false;
+        public virtual void AnimationStartMovementTrigger()
+        {
+
+        }
+
+        public virtual void AnimationStopMovementTrigger()
+        {
+
+        }
     }
 }
