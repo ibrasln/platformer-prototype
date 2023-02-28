@@ -32,7 +32,14 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (Time.time >= startTime + playerData.dashTime || isTouchingWall)
+            
+            if (attackInput && onGround)
+            {
+                isAbilityDone = true;
+                lastDashTime = Time.time;
+                stateMachine.ChangeState(player.DashAttackState);
+            }
+            else if (Time.time >= startTime + playerData.dashTime || isTouchingWall)
             {
                 isAbilityDone = true;
                 lastDashTime = Time.time;

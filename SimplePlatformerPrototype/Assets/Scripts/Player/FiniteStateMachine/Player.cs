@@ -16,6 +16,7 @@ namespace Platformer.Player
         public PlayerLedgeGrabState LedgeGrabState { get; private set; }
         public PlayerLadderClimbState LadderClimbState { get; private set; }
         public PlayerAttackState AttackState { get; private set; }
+        public PlayerDashAttackState DashAttackState { get; private set; }
         #endregion
 
         #region COMPONENTS
@@ -40,6 +41,7 @@ namespace Platformer.Player
         [SerializeField] private Transform ladderCheckPosition;
         [SerializeField] private Transform ledgeCheckPosition;
         [SerializeField] private Transform feetWallCheckPosition;
+        [SerializeField] private Transform ceilingCheckPosition;
         #endregion
 
         #region UNITY CALLBACK FUNCTIONS
@@ -61,6 +63,7 @@ namespace Platformer.Player
             LedgeGrabState = new(this, StateMachine, playerData, "ledgeGrab");
             LadderClimbState = new(this, StateMachine, playerData, "ladderClimb");
             AttackState = new(this, StateMachine, playerData, "attack");
+            DashAttackState = new(this, StateMachine, playerData, "dashAttack");
         }
 
         private void Start()
@@ -139,6 +142,11 @@ namespace Platformer.Player
         public bool CheckIsTouchingLadder()
         {
             return Physics2D.OverlapCircle(ladderCheckPosition.position, playerData.ladderCheckRadius, playerData.whatIsLadder);
+        }
+
+        public bool CheckIsTouchingCeiling()
+        {
+            return true; //TODO: DONT FORGET TO COMPLETE IT
         }
 
         public void CheckIfShouldFlip(int xInput)

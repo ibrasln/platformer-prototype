@@ -51,8 +51,6 @@ namespace Platformer.Player
             dashInput = player.InputHandler.DashInput;
             attackInput = player.InputHandler.AttackInput;
 
-            Debug.Log($"yInput: {yInput} | isTouchingLadder: {isTouchingLadder}");
-
             if (attackInput)
             {
                 stateMachine.ChangeState(player.AttackState);

@@ -39,7 +39,6 @@ namespace Platformer.Player
             }
             else if (!isFeetTouchingWall && player.CurrentVelocity.y < .1f)
             {
-                player.SetVelocityX(-player.FacingDirection);
                 stateMachine.ChangeState(player.InAirState);
             }
             else

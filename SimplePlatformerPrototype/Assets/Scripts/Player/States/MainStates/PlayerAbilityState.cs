@@ -2,6 +2,8 @@ namespace Platformer.Player
 {
     public class PlayerAbilityState : PlayerState
     {
+        protected bool attackInput;
+
         protected bool isAbilityDone;
 
         protected bool onGround;
@@ -31,6 +33,8 @@ namespace Platformer.Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+            attackInput = player.InputHandler.AttackInput;
+
             if (isAbilityDone)
             {
                 if (onGround && player.CurrentVelocity.y < .1f)

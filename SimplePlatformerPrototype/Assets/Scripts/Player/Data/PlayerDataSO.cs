@@ -62,5 +62,6 @@ namespace Platformer.Player
         [Header("ATTACK")]
         public int attackAmount = 2;
         public float attackMovementSpeed = 2.5f;
+        public float dashAttackMovementSpeed = 10f;
     }
 }

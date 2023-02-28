@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Platformer.Player
 {
     public class PlayerAttackState : PlayerAbilityState
